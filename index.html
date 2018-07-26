@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <button id="button1">Do connect</button><br>
+    <input type="text" id="input1"><button id="button2">Send Msg</button><br>
+    <button id="button3">Close</button>
+
+    <script>
+        let ws = null;
+        window.onload = function () {
+
+            document.getElementById("button1").onclick = function() {
+                ws = new WebSocket("ws://localhost:9316/ws/websocket1");
+
+                ws.onopen = function() {
+                    console.log("已连接...");
+                };
+
+                ws.onmessage = function (evt) {
+                    let received_msg = evt.data;
+                    console.log("数据已接收: " + received_msg);
+                };
+
+                ws.onclose = function() {
+                    // 关闭 websocket
+                    console.log("连接已关闭...");
+                    ws = null;
+                };
+            };
+
+            document.getElementById("button2").onclick = function() {
+                let message = document.getElementById("input1").value;
+                console.log("发送数据: " + message);
+                ws.send(message);
+            };
+
+            document.getElementById("button3").onclick = function() {
+                ws.close();
+            };
+
+        }
+    </script>
+</body>
+</html>
